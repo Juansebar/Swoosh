@@ -3,17 +3,15 @@ package com.juanse.swoosh.Controller
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import com.juanse.swoosh.Utilities.EXTRA_LEAGUE
+import com.juanse.swoosh.Model.LeagueGender
+import com.juanse.swoosh.Model.Player
 import com.juanse.swoosh.R
+import com.juanse.swoosh.Utilities.EXTRA_PLAYER
 import kotlinx.android.synthetic.main.activity_league.*
-
-enum class League {
-    men, women, coed
-}
 
 class LeagueActivity : BaseActivity() {
 
-    private var selectedLeague: League? = null
+    private var player: Player = Player()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,11 +41,11 @@ class LeagueActivity : BaseActivity() {
     }
 
     private fun nextButtonClicked() {
-        if (selectedLeague != null) {
+        if (player.leagueGender != "") {
             val skillActivityIntent = Intent(this, SkillActivity::class.java)
 
             // We can append data to the Intent as an extra
-            skillActivityIntent.putExtra(EXTRA_LEAGUE, selectedLeague!!.toString())
+            skillActivityIntent.putExtra(EXTRA_PLAYER, player)
             startActivity(skillActivityIntent)
         } else {
             // Use Toast to give feedback to the user
@@ -60,7 +58,7 @@ class LeagueActivity : BaseActivity() {
         womensLeagueButton.isChecked = false
         coedLeagueButton.isChecked = false
 
-        selectedLeague = League.men
+        player.leagueGender = "men"
     }
 
     private fun onWomensLeagueClicked() {
@@ -68,7 +66,7 @@ class LeagueActivity : BaseActivity() {
         mensLeagueButton.isChecked = false
         coedLeagueButton.isChecked = false
 
-        selectedLeague = League.women
+        player.leagueGender = "women"
     }
 
     private fun onCoedLeagueClicked() {
@@ -76,6 +74,6 @@ class LeagueActivity : BaseActivity() {
         womensLeagueButton.isChecked = false
         mensLeagueButton.isChecked = false
 
-        selectedLeague = League.coed
+        player.leagueGender = "coed"
     }
 }

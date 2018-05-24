@@ -3,25 +3,24 @@ package com.juanse.swoosh.Controller
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import com.juanse.swoosh.Utilities.EXTRA_LEAGUE
+import com.juanse.swoosh.Model.Player
 import com.juanse.swoosh.R
-import com.juanse.swoosh.Utilities.EXTRA_SKILL_LEVEL
+import com.juanse.swoosh.Utilities.EXTRA_PLAYER
 import kotlinx.android.synthetic.main.activity_skill.*
 
 class SkillActivity : BaseActivity() {
 
-    private var league: League? = null
-    private var skillLevel: String = ""
+    // Behaves like lazy var (declare but don't initialize)
+    private lateinit var player: Player
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_skill)
 
         // Get the values from Extra
-        val leagueString = intent.getStringExtra(EXTRA_LEAGUE)
-        league = League.valueOf(leagueString)
+        player = intent.getParcelableExtra(EXTRA_PLAYER)
 
-        println("Selected League: ${league}")
+        println("Selected League: ${player.leagueGender}")
 
         setupViews()
     }
@@ -42,8 +41,8 @@ class SkillActivity : BaseActivity() {
         if (ballerSkillButton.isChecked || beginnerSkillButton.isChecked) {
             val finishActivityIntent = Intent(this, FinishActivity::class.java)
 
-            finishActivityIntent.putExtra(EXTRA_SKILL_LEVEL, skillLevel)
-            finishActivityIntent.putExtra(EXTRA_LEAGUE, league!!.toString())
+            // Using Parcelable Extra
+            finishActivityIntent.putExtra(EXTRA_PLAYER, player)
             startActivity(finishActivityIntent)
         } else {
             Toast.makeText(this, "Please select a skill level", Toast.LENGTH_SHORT).show()
@@ -52,12 +51,12 @@ class SkillActivity : BaseActivity() {
 
     private fun onBeginnerSkillButtonClicked() {
         ballerSkillButton.isChecked = false
-        skillLevel = "beginner"
+        player.skillLevel = "beginner"
     }
 
     private fun onBallerSkillButtonClicked() {
         beginnerSkillButton.isChecked = false
-        skillLevel = "baller"
+        player.skillLevel = "baller"
     }
 }
 
