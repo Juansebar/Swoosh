@@ -2,6 +2,7 @@ package com.juanse.swoosh.Controller
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.widget.Toast
 import com.juanse.swoosh.Model.LeagueGender
 import com.juanse.swoosh.Model.Player
@@ -13,14 +14,27 @@ class LeagueActivity : BaseActivity() {
 
     private var player: Player = Player()
 
+    // Save vars when device orientation is changed or else gets deleted
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+
+        // Nullable b/c if its first time running there is no previously save Instance State
+        outState?.putParcelable(EXTRA_PLAYER, player)
+    }
+
+    // Access stored Instance State
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        if (savedInstanceState != null) {
+            player = savedInstanceState.getParcelable(EXTRA_PLAYER)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_league)
 
-//        nextButton.setOnClickListener {
-//            val skillActivityIntent = Intent(this, SkillActivity::class.java)
-//            startActivity(skillActivityIntent)
-//        }
         setupViews()
     }
 
